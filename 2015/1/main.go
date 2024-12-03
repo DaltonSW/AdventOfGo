@@ -1,8 +1,8 @@
 package main
 
 import (
-	"dalton.dog/aocgo"
 	"github.com/charmbracelet/log"
+	"go.dalton.dog/aocgo"
 )
 
 func main() {
