@@ -30,10 +30,7 @@ func PartOne(data []byte) int {
 
 	regexPattern := "mul\\(\\d{1,3},\\d{1,3}\\)"
 
-	re, err := regexp.Compile(regexPattern)
-	if err != nil {
-		log.Fatal(err)
-	}
+	re := regexp.MustCompile(regexPattern)
 
 	matches := re.FindAll(data, -1)
 
@@ -58,25 +55,43 @@ func PartOne(data []byte) int {
 func PartTwo(data []byte) int {
 	var answer int
 
-	regexPattern := "don't\\(\\).*do\\(\\)"
+	log.Debug(string(data))
 
-	re, err := regexp.Compile(regexPattern)
-	if err != nil {
-		log.Fatal(err)
+	// regexPattern := "don't\\(\\)(?s).*do\\(\\)"
+	regexPattern := `(mul\((\d{1,3}),(\d{1,3})\)|don't\(\)|do\(\))`
+
+	re := regexp.MustCompile(regexPattern)
+
+	// shoutouts to u/BitE01 on from the megathread for showing this reference
+
+	matches := re.FindAllStringSubmatch(string(data), -1)
+
+	log.Debug(matches)
+
+	multEnabled := true
+
+	for _, match := range matches {
+		switch match[1] {
+		case "do()":
+			multEnabled = true
+		case "don't()":
+			multEnabled = false
+		default:
+			if multEnabled {
+				numPattern := "\\d{1,3}"
+				re = regexp.MustCompile(numPattern)
+
+				firstNum, _ := strconv.Atoi(match[2])
+				secondNum, _ := strconv.Atoi(match[3])
+
+				answer += firstNum * secondNum
+			}
+
+		}
 	}
-
-	newData := re.ReplaceAllString(string(data), "")
-
-	regexPattern = "don't\\(\\).*$"
-
-	re, err = regexp.Compile(regexPattern)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	newData = re.ReplaceAllString(string(newData), "")
-
-	answer = PartOne([]byte(newData))
+	// log.Debug(newData)
+	//
+	// answer = PartOne([]byte(newData))
 
 	return answer
 }
