@@ -1,7 +1,9 @@
 package main
 
 import (
-	// "os"
+	"os"
+	// "strconv"
+	"strings"
 
 	"github.com/charmbracelet/log"
 	"go.dalton.dog/aocgo"
@@ -11,9 +13,8 @@ import (
 func main() {
 	var data []string
 	// byteData, _ := os.ReadFile("input.txt")
-	// byteData, _ := os.ReadFile("example.txt")
-	// strData := string(byteData)
-	// data = strings.Split(strData, "\n")
+	exampleBytes, _ := os.ReadFile("example.txt")
+	exampleData := strings.Split(string(exampleBytes), "\n")
 
 	data = aocgo.GetInputAsLineArray()
 
@@ -21,10 +22,11 @@ func main() {
 
 	log.Debug(len(data))
 
-	ansOne := PartOne(data)
-	log.Info("Part One", "answer", ansOne)
-	ansTwo := PartTwo(data)
-	log.Info("Part Two", "answer", ansTwo)
+	log.Info("Example One", "answer", PartOne(exampleData))
+	log.Info("Part One", "answer", PartOne(data))
+
+	log.Info("Example Two", "answer", PartTwo(exampleData))
+	log.Info("Part Two", "answer", PartTwo(data))
 }
 
 func PartOne(data []string) int {
