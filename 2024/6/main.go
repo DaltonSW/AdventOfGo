@@ -1,14 +1,60 @@
 package main
 
 import (
+	"fmt"
 	"os"
+	"time"
 
 	"strings"
 
+	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/log"
 	"go.dalton.dog/aocgo"
 	// "go.dalton.dog/aocgo/aocutils"
 )
+
+// DoSolve will attempt to run the input function with the input data
+// It will print out information about the function run in a pretty table
+func DoSolve(title string, solver func([]string) int, inputData []string) {
+	start := time.Now()
+
+	answer := solver(inputData)
+
+	timeTaken := time.Since(start)
+
+	// Convert the answer to a string
+	answerStr := fmt.Sprintf("%v", answer)
+
+	// Create styles using lipgloss
+	titleStyle := lipgloss.NewStyle().
+		Bold(true).
+		Foreground(lipgloss.Color("#FFFFFF")).
+		Background(lipgloss.Color("#5A56E0")).
+		Padding(0, 1).Margin(1, 0, 0).
+		AlignHorizontal(lipgloss.Center)
+
+	borderStyle := lipgloss.NewStyle().
+		Border(lipgloss.RoundedBorder()).
+		BorderForeground(lipgloss.Color("#5A56E0")).
+		Padding(0, 2)
+
+	prettyAnswer := fmt.Sprintf("Answer  : %v\n", answerStr)
+
+	prettyTime := fmt.Sprintf("Runtime : %v", timeTaken)
+
+	// Render the answer inside the border
+	wrappedAnswer := borderStyle.Render(prettyAnswer + prettyTime)
+
+	// Render the title
+	titleBox := titleStyle.Width(lipgloss.Width(wrappedAnswer)).Render(title)
+
+	// Combine the title and wrapped answer
+	output := lipgloss.JoinVertical(lipgloss.Top, titleBox, wrappedAnswer)
+
+	// Display the output
+	fmt.Println(output)
+
+}
 
 func main() {
 	var data []string
@@ -35,14 +81,13 @@ func main() {
 	// log.SetLevel(log.DebugLevel)
 
 	// log.Debug(charMatrix)
+	// DoSolve("Part One", PartOne, data)
+	// DoSolve("Part Two", PartTwo, data)
 
-	log.Info("Example One", "answer", PartOne(exampleMatrix))
-
-	log.Info("Part One", "answer", PartOne(charMatrix))
-
-	log.Info("Example Two", "answer", PartTwo(exampleMatrix))
-
-	log.Info("Part Two", "answer", PartTwo(charMatrix))
+	// ansOne := PartOne(data)
+	// log.Info("Part One", "answer", ansOne)
+	// ansTwo := PartTwo(data)
+	// log.Info("Part Two", "answer", ansTwo)
 }
 
 type Coord struct {
